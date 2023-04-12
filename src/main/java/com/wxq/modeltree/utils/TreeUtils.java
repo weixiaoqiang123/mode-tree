@@ -56,7 +56,9 @@ public class TreeUtils {
     private static <T extends Tree> void mountChildTreeNodes(TreeNode treeNode, Tree parentNode, List<T> nodes){
         String currentNodeId = parentNode.getCurrentNodeId();
         TreeNode currentNode = transformToTreeNode(parentNode);
-        List<T> childNodes = nodes.stream().filter(node -> currentNodeId.equals(node.getParentNodeId()))
+        List<T> childNodes = nodes.stream()
+                .filter(node -> currentNodeId.equals(node.getParentNodeId()))
+                .filter(node -> !currentNodeId.equals(node.getCurrentNodeId()))
                 .collect(Collectors.toList());
 
         for (T childNode : childNodes) {
