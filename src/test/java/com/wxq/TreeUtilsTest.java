@@ -1,9 +1,9 @@
 package com.wxq;
 
-import com.wxq.core.Tree;
-import com.wxq.core.TreeNode;
+import com.wxq.modeltree.core.Tree;
+import com.wxq.modeltree.core.TreeNode;
 import com.wxq.model.Cate;
-import com.wxq.utils.TreeUtils;
+import com.wxq.modeltree.utils.TreeUtils;
 import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.List;

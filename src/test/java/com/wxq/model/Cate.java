@@ -1,6 +1,6 @@
 package com.wxq.model;
 
-import com.wxq.core.Tree;
+import com.wxq.modeltree.core.Tree;
 
 /**
  * @author weixiaoqiang

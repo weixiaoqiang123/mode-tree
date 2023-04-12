@@ -1,4 +1,4 @@
-package com.wxq.core;
+package com.wxq.modeltree.core;
 
 import java.util.ArrayList;
 import java.util.HashMap;

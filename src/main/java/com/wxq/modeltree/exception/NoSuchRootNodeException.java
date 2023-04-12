@@ -1,4 +1,4 @@
-package com.wxq.exception;
+package com.wxq.modeltree.exception;
 
 /**
  * @author weixiaoqiang

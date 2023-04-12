@@ -1,12 +1,13 @@
-package com.wxq.utils;
+package com.wxq.modeltree.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
-import com.wxq.core.Tree;
-import com.wxq.core.TreeNode;
-import com.wxq.exception.NoSuchRootNodeException;
+import com.wxq.modeltree.core.RootNode;
+import com.wxq.modeltree.core.Tree;
+import com.wxq.modeltree.core.TreeNode;
+import com.wxq.modeltree.exception.NoSuchRootNodeException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,7 +33,7 @@ public class TreeUtils {
         }
 
         rootNodeId = "".equals(rootNodeId) || null == rootNodeId ? "-1" : rootNodeId;
-        T rootNode = findRootNode(nodes, rootNodeId);
+        Tree rootNode = findRootNode(nodes, rootNodeId);
         // 过滤节点ID为空的节点
         nodes = nodes.stream().filter(node -> !isEmptyNode(node)).collect(Collectors.toList());
         mountChildTreeNodes(rootTree, rootNode, nodes);
@@ -52,7 +53,7 @@ public class TreeUtils {
         return JSON.parseObject(JSON.toJSONString(node, filters, SerializerFeature.WriteMapNullValue), TreeNode.class);
     }
 
-    private static <T extends Tree> void mountChildTreeNodes(TreeNode treeNode, T parentNode, List<T> nodes){
+    private static <T extends Tree> void mountChildTreeNodes(TreeNode treeNode, Tree parentNode, List<T> nodes){
         String currentNodeId = parentNode.getCurrentNodeId();
         TreeNode currentNode = transformToTreeNode(parentNode);
         List<T> childNodes = nodes.stream().filter(node -> currentNodeId.equals(node.getParentNodeId()))
@@ -65,15 +66,23 @@ public class TreeUtils {
         treeNode.appendChild(currentNode);
     }
 
-    private static <T extends Tree> T findRootNode(List<T> nodes, String rootNodId){
+    private static <T extends Tree> Tree findRootNode(List<T> nodes, String rootNodId){
         Optional<T> result = nodes.stream()
                 .filter(node -> !isEmptyNode(node))
-                .filter(node -> rootNodId.equals(node.getCurrentNodeId()))
+                .filter(node -> rootNodId.equals(node.getCurrentNodeId()) || rootNodId.equals(node.getParentNodeId()))
                 .findFirst();
 
         if(!result.isPresent()) {
             throw new NoSuchRootNodeException("Not found this root node, node id: " + rootNodId);
         }
+
+        if(rootNodId.equals(result.get().getParentNodeId())) {
+            // 父节点ID匹配记录
+            RootNode root = new RootNode();
+            root.setNodeId(rootNodId);
+            return root;
+        }
+        // 节点ID匹配记录
         return result.get();
     }
 
